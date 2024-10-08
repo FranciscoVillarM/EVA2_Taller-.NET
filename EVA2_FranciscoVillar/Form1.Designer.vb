@@ -40,6 +40,10 @@ Partial Class Form1
         TxtObservacion = New TextBox()
         BtnBuscar = New Button()
         BtnGuardar = New Button()
+        BtnVerDatosBD = New Button()
+        LblEjemploRut = New Label()
+        BtnEliminar = New Button()
+        BtnActualizar = New Button()
         SuspendLayout()
         ' 
         ' LblRut
@@ -195,18 +199,61 @@ Partial Class Form1
         ' BtnGuardar
         ' 
         BtnGuardar.BackColor = SystemColors.ScrollBar
-        BtnGuardar.Location = New Point(122, 518)
+        BtnGuardar.Location = New Point(22, 476)
         BtnGuardar.Name = "BtnGuardar"
-        BtnGuardar.Size = New Size(221, 48)
+        BtnGuardar.Size = New Size(154, 48)
         BtnGuardar.TabIndex = 17
         BtnGuardar.Text = "Guardar MySql"
         BtnGuardar.UseVisualStyleBackColor = False
+        ' 
+        ' BtnVerDatosBD
+        ' 
+        BtnVerDatosBD.BackColor = SystemColors.ScrollBar
+        BtnVerDatosBD.Location = New Point(293, 541)
+        BtnVerDatosBD.Name = "BtnVerDatosBD"
+        BtnVerDatosBD.Size = New Size(154, 48)
+        BtnVerDatosBD.TabIndex = 20
+        BtnVerDatosBD.Text = "Ver datos BD"
+        BtnVerDatosBD.UseVisualStyleBackColor = False
+        ' 
+        ' LblEjemploRut
+        ' 
+        LblEjemploRut.AutoSize = True
+        LblEjemploRut.Location = New Point(67, 9)
+        LblEjemploRut.Name = "LblEjemploRut"
+        LblEjemploRut.Size = New Size(149, 20)
+        LblEjemploRut.TabIndex = 21
+        LblEjemploRut.Text = "Ejemplo: 16912321-2"
+        ' 
+        ' BtnEliminar
+        ' 
+        BtnEliminar.BackColor = SystemColors.ScrollBar
+        BtnEliminar.Location = New Point(22, 541)
+        BtnEliminar.Name = "BtnEliminar"
+        BtnEliminar.Size = New Size(154, 48)
+        BtnEliminar.TabIndex = 22
+        BtnEliminar.Text = "Eliminar"
+        BtnEliminar.UseVisualStyleBackColor = False
+        ' 
+        ' BtnActualizar
+        ' 
+        BtnActualizar.BackColor = SystemColors.ScrollBar
+        BtnActualizar.Location = New Point(293, 476)
+        BtnActualizar.Name = "BtnActualizar"
+        BtnActualizar.Size = New Size(154, 48)
+        BtnActualizar.TabIndex = 23
+        BtnActualizar.Text = "Actualizar"
+        BtnActualizar.UseVisualStyleBackColor = False
         ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(8F, 19F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(490, 617)
+        Controls.Add(BtnActualizar)
+        Controls.Add(BtnEliminar)
+        Controls.Add(LblEjemploRut)
+        Controls.Add(BtnVerDatosBD)
         Controls.Add(BtnGuardar)
         Controls.Add(BtnBuscar)
         Controls.Add(TxtObservacion)
@@ -249,5 +296,9 @@ Partial Class Form1
     Friend WithEvents TxtObservacion As TextBox
     Friend WithEvents BtnBuscar As Button
     Friend WithEvents BtnGuardar As Button
+    Friend WithEvents BtnVerDatosBD As Button
+    Friend WithEvents LblEjemploRut As Label
+    Friend WithEvents BtnEliminar As Button
+    Friend WithEvents BtnActualizar As Button
 
 End Class

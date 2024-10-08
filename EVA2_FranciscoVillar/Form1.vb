@@ -31,9 +31,9 @@ Public Class Form1
     End Sub
 
     Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
-        Dim rut As String = txtRut.Text
-        Dim nombre As String = txtNombres.Text
-        Dim apellido As String = txtApellidos.Text
+        Dim rut = TxtRut.Text
+        Dim nombre = TxtNombres.Text
+        Dim apellido = TxtApellidos.Text
         Dim sexo As String
 
 
@@ -49,9 +49,9 @@ Public Class Form1
         End If
 
         ' Obtener otros campos
-        Dim comuna As String = ComboBoxComunas.SelectedItem?.ToString()
-        Dim ciudad As String = TxtCiudad.Text
-        Dim observacion As String = TxtObservacion.Text
+        Dim comuna = ComboBoxComunas.SelectedItem?.ToString
+        Dim ciudad = TxtCiudad.Text
+        Dim observacion = TxtObservacion.Text
 
         ' Validar campos obligatorios
         If String.IsNullOrWhiteSpace(rut) Or String.IsNullOrWhiteSpace(nombre) Or String.IsNullOrWhiteSpace(apellido) Or String.IsNullOrWhiteSpace(comuna) Then
@@ -64,7 +64,7 @@ Public Class Form1
             Try
                 conn.Open()
 
-                Dim sql As String = "INSERT INTO personas (RUT, Nombre, Apellido, Sexo, Comuna, Ciudad, Observacion) " &
+                Dim sql = "INSERT INTO personas (RUT, Nombre, Apellido, Sexo, Comuna, Ciudad, Observacion) " &
                                 "VALUES (@rut, @nombre, @apellido, @sexo, @comuna, @ciudad, @observacion)"
 
                 Using cmd As New MySqlCommand(sql, conn)
@@ -103,8 +103,8 @@ Public Class Form1
         TxtRut.Focus() ' Coloca el cursor en el campo "RUT"
     End Sub
 
-    Private Sub btnBuscar_Click(sender As Object, e As EventArgs) Handles btnBuscar.Click
-        Dim rut As String = txtRut.Text
+    Private Sub btnBuscar_Click(sender As Object, e As EventArgs) Handles BtnBuscar.Click
+        Dim rut As String = TxtRut.Text
 
         ' Validar que el campo RUT no esté vacío
         If String.IsNullOrWhiteSpace(rut) Then
@@ -125,8 +125,8 @@ Public Class Form1
                     Using reader As MySqlDataReader = cmd.ExecuteReader()
                         If reader.Read() Then
                             ' Si se encuentra el registro, rellenar los campos
-                            txtNombres.Text = reader("Nombre").ToString()
-                            txtApellidos.Text = reader("Apellido").ToString()
+                            TxtNombres.Text = reader("Nombre").ToString()
+                            TxtApellidos.Text = reader("Apellido").ToString()
                             Dim sexo As String = reader("Sexo").ToString()
 
                             ' Seleccionar el radio button según el valor del sexo
@@ -141,7 +141,7 @@ Public Class Form1
 
                             ComboBoxComunas.SelectedItem = reader("Comuna").ToString()
                             TxtCiudad.Text = reader("Ciudad").ToString()
-                            txtObservacion.Text = reader("Observacion").ToString()
+                            TxtObservacion.Text = reader("Observacion").ToString()
 
                             MessageBox.Show("Registro encontrado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         Else
@@ -175,7 +175,90 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Sub LblRut_Click(sender As Object, e As EventArgs) Handles LblRut.Click
+    Private Sub BtnActualizar_Click(sender As Object, e As EventArgs) Handles BtnActualizar.Click
+        ' Validar que se hayan cargado los datos del usuario
+        If String.IsNullOrWhiteSpace(TxtRut.Text) Then
+            MessageBox.Show("Por favor, busque un usuario antes de actualizar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
 
+        ' Obtener los nuevos datos del formulario
+        Dim nombre = TxtNombres.Text
+        Dim apellido = TxtApellidos.Text
+        ' ... (obtener otros campos)
+
+        ' Actualizar los datos en la base de datos
+        Using conn As New MySqlConnection(connectionString)
+            Try
+                conn.Open()
+
+                Dim sql = "UPDATE personas SET Nombre = @nombre, Apellido = @apellido, " &
+                          "Sexo = @sexo, Comuna = @comuna, Ciudad = @ciudad, Observacion = @observacion " &
+                          "WHERE RUT = @rut"
+
+                Using cmd As New MySqlCommand(sql, conn)
+                    ' ... (asignar parámetros)
+                    cmd.ExecuteNonQuery()
+                    MessageBox.Show("Datos actualizados exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Using
+            Catch ex As Exception
+                MessageBox.Show("Error al actualizar los datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+
+        End Using
+    End Sub
+
+    Private Sub BtnEliminar_Click(sender As Object, e As EventArgs) Handles BtnEliminar.Click
+        ' Validar que se hayan cargado los datos del usuario
+        If String.IsNullOrWhiteSpace(TxtRut.Text) Then
+            MessageBox.Show("Por favor, busque un usuario antes de eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        If MessageBox.Show("¿Está seguro que desea eliminar este registro?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            Using conn As New MySqlConnection(connectionString)
+                Try
+                    conn.Open()
+
+                    Dim sql = "DELETE FROM personas WHERE RUT = @rut"
+                    Using cmd As New MySqlCommand(sql, conn)
+                        cmd.Parameters.AddWithValue("@rut", TxtRut.Text)
+                        cmd.ExecuteNonQuery()
+                        MessageBox.Show("Registro eliminado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        LimpiarFormulario()
+                    End Using
+                Catch ex As Exception
+                    MessageBox.Show("Error al eliminar el registro: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+
+            End Using
+        End If
+    End Sub
+
+    Private Sub BtnVerDatosBD_Click(sender As Object, e As EventArgs) Handles BtnVerDatosBD.Click
+        Dim todosLosUsuarios As String = ""
+
+        Using conn As New MySqlConnection(connectionString)
+            Try
+                conn.Open()
+
+                Dim sql = "SELECT RUT, Nombre, Apellido FROM personas"
+                Using cmd As New MySqlCommand(sql, conn)
+                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                        While reader.Read()
+                            todosLosUsuarios &= $"RUT: {reader("RUT")}, Nombre: {reader("Nombre")}, Apellido: {reader("Apellido")} {Environment.NewLine}"
+                        End While
+                    End Using
+                End Using
+
+                If todosLosUsuarios = "" Then
+                    MessageBox.Show("No hay usuarios registrados.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Else
+                    MessageBox.Show(todosLosUsuarios, "Todos los Usuarios", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+            Catch ex As Exception
+                MessageBox.Show("Error al obtener los datos de los usuarios: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End Using
     End Sub
 End Class
