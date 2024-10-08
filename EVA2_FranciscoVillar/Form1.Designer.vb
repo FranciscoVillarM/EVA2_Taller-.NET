@@ -273,7 +273,7 @@ Partial Class Form1
         Controls.Add(LblNombres)
         Controls.Add(LblRut)
         Name = "Form1"
-        Text = "EVA2_FranciscoVillar"
+        Text = "EPE2_FranciscoVillar"
         ResumeLayout(False)
         PerformLayout()
     End Sub

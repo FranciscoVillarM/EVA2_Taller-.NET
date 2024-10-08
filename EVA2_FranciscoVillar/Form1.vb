@@ -183,9 +183,13 @@ Public Class Form1
         End If
 
         ' Obtener los nuevos datos del formulario
+        Dim rut = TxtRut.Text
         Dim nombre = TxtNombres.Text
         Dim apellido = TxtApellidos.Text
-        ' ... (obtener otros campos)
+        Dim sexo As String = If(RadioBtnMasculino.Checked, "Masculino", If(RadioBtnFemenino.Checked, "Femenino", "Indefinido"))
+        Dim comuna = ComboBoxComunas.SelectedItem.ToString
+        Dim ciudad = TxtCiudad.Text
+        Dim observacion = TxtObservacion.Text
 
         ' Actualizar los datos en la base de datos
         Using conn As New MySqlConnection(connectionString)
@@ -193,12 +197,21 @@ Public Class Form1
                 conn.Open()
 
                 Dim sql = "UPDATE personas SET Nombre = @nombre, Apellido = @apellido, " &
-                          "Sexo = @sexo, Comuna = @comuna, Ciudad = @ciudad, Observacion = @observacion " &
-                          "WHERE RUT = @rut"
+                      "Sexo = @sexo, Comuna = @comuna, Ciudad = @ciudad, Observacion = @observacion " &
+                      "WHERE RUT = @rut"
 
                 Using cmd As New MySqlCommand(sql, conn)
-                    ' ... (asignar parámetros)
+                    cmd.Parameters.AddWithValue("@rut", rut)
+                    cmd.Parameters.AddWithValue("@nombre", nombre)
+                    cmd.Parameters.AddWithValue("@apellido", apellido)
+                    cmd.Parameters.AddWithValue("@sexo",
+ sexo)
+                    cmd.Parameters.AddWithValue("@comuna",
+ comuna)
+                    cmd.Parameters.AddWithValue("@ciudad", ciudad)
+                    cmd.Parameters.AddWithValue("@observacion", observacion)
                     cmd.ExecuteNonQuery()
+
                     MessageBox.Show("Datos actualizados exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Using
             Catch ex As Exception
@@ -234,7 +247,7 @@ Public Class Form1
             End Using
         End If
     End Sub
-
+    ' Listar todos los usuarios en la Base de datos
     Private Sub BtnVerDatosBD_Click(sender As Object, e As EventArgs) Handles BtnVerDatosBD.Click
         Dim todosLosUsuarios As String = ""
 
